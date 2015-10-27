@@ -1,6 +1,7 @@
 package com.github.hhannu.spdcam;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -27,6 +28,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
+        Log.d(TAG, "surfaceCreated()");
         try {
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
@@ -36,13 +38,16 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
+        Log.d(TAG, "surfaceDestroyed()");
         // Release the Camera preview.
+        //mCamera.stopPreview(); Causes RuntimeException
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
+        Log.d(TAG, "surfaceChanged()");
 
         if (mHolder.getSurface() == null){
-          return;
+            return;
         }
 
         // Stop preview before making changes
@@ -51,7 +56,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (Exception e){}
 
         // TODO: settings
-        mCamera.setDisplayOrientation(90);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mCamera.setDisplayOrientation(90);
+        }
 
         // Start preview with new settings
         try {
